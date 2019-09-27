@@ -70,14 +70,14 @@ class Neural_Network(object):
     
     
     def get_weight_vector(self):
-        #helper method used in the calculation of numerical gradients
+        #Helper method used in the calculation of numerical gradients
         vector = self.weights[0]
         for w in self.weights[1:]:
             vector = np.concatenate((vector,w.ravel()), axis=None)
         return vector
 
     def set_weights(self, weight_vector):
-        #helper method used in the calculation of numerical gradients
+        #Helper method used in the calculation of numerical gradients
         passed = 0
         for i in range(len(self.weights)):
             vector = np.array(weight_vector[passed: passed+self.weights[i].size])
@@ -86,8 +86,8 @@ class Neural_Network(object):
         
     
     def train(self, training_data, eta, iterations):
-        #This method allows the network to be trained my making use of online training/incremental learning
-        #where the weights are updated after every single training example
+        #This method allows the network to be trained with online training/incremental learning
+        #where the weights and biases are updated after every single training example
         for i in range(iterations):
             example = random.choice(training_data)
             self.cost_function_prime(example[0],example[1])
@@ -103,7 +103,7 @@ class Neural_Network(object):
         nalba_w = [np.zeros(w.shape) for w in self.weights]
         nalba_b = [np.zeros(b.shape) for b in self.biases]
         
-        #Calculate the derivatives of cost function for each example in the mini_batch and add all of the gradients up
+        #Calculate the derivatives of cost function for each example in the mini-batch and add all of the gradients up
         #storing the results in the lists
         for x,y in mini_batch:
             delta_w, delta_b = self.cost_function_prime(x,y)
@@ -125,7 +125,7 @@ class Neural_Network(object):
         n = len(training_data)
         cost = []
         for i in range(epochs):
-            #For each epoch split all of the data into mini-batches of size batch_size
+            #For each epoch split all of the training data into mini-batches of size batch_size
             random.shuffle(training_data)
             #Create mini-batches
             mini_batches = [training_data[x:x+batch_size] for x in range(0,n,batch_size)]
@@ -133,9 +133,9 @@ class Neural_Network(object):
             for x in mini_batches:
                 self.train_on_mini_batch(x,eta)
             
-            #If test data is provided test the data on all of the training data and return a list on the average cost 
-            #for all over all of the test data for this epoch, this can be plotted to visualise progress. Testing after every
-            #epoch will slow down training substantiall and should only be done during tesing.
+            #If test data is provided test the network on all of the test data and return a list containing the average cost 
+            #over all of the test data after each mini-batch, this can be plotted to visualise progress. Testing after every
+            #mini-batch will slow down training substantially and should only be done during tesing.
             if test_data:
                 n_test = len(test_data)
                 correct = 0
@@ -156,7 +156,7 @@ class Neural_Network(object):
         
              
 def calculate_numerical_gradients(net,X,y):
-    #Calulate numerical gradients in order to test if backpropagation was implemented correctly
+    #Calculate numerical gradients in order to test if backpropagation was implemented correctly
     initial_weight_vector = net.get_weight_vector();
     epsilon = 1e-4
     perturb_vector = np.zeros(initial_weight_vector.shape)
